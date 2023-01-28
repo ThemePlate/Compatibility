@@ -15,6 +15,11 @@ class Compatibility {
 	protected string $wp_version;
 	protected string $php_version;
 	protected array $errors;
+	protected array $messages = array(
+		'header' => '%s compatibility issue.',
+		'wp'     => 'Requires at least WordPress version %s',
+		'php'    => 'Requires at least PHP version %s',
+	);
 
 
 	public function __construct( string $package_name, string $wp_version, string $php_version ) {
@@ -33,13 +38,34 @@ class Compatibility {
 	}
 
 
+	public function message_header( string $message ): void {
+
+		$this->messages['header'] = $message;
+
+	}
+
+
+	public function message_wp( string $message ): void {
+
+		$this->messages['wp'] = $message;
+
+	}
+
+
+	public function message_php( string $message ): void {
+
+		$this->messages['php'] = $message;
+
+	}
+
+
 	public function valid_wp(): bool {
 
 		if ( version_compare( $GLOBALS['wp_version'], $this->wp_version, '<' ) ) {
 			$this->add_error(
 				sprintf(
-					'Requires at least WordPress version %s',
-					'<strong>' . $this->wp_version . '</strong>'
+					$this->messages['wp'],
+					$this->wp_version
 				)
 			);
 
@@ -56,8 +82,8 @@ class Compatibility {
 		if ( version_compare( PHP_VERSION, $this->php_version, '<' ) ) {
 			$this->add_error(
 				sprintf(
-					'Requires at least PHP version %s',
-					'<strong>' . $this->php_version . '</strong>'
+					$this->messages['php'],
+					$this->php_version
 				)
 			);
 
@@ -82,7 +108,7 @@ class Compatibility {
 		<div class="notice notice-error">
 			<h2>
 				<?php printf(
-					'%s compatibility issue.',
+					$this->messages['header'],
 					$this->package_name
 				); ?>
 			</h2>
