@@ -17,8 +17,8 @@ class Compatibility {
 	protected array $errors;
 	protected array $messages = array(
 		'header' => '%s compatibility issue.',
-		'wp'     => 'Requires at least WordPress version %s',
-		'php'    => 'Requires at least PHP version %s',
+		'wp'     => 'Requires at least WordPress version %1$s. (Installed v%2$s)',
+		'php'    => 'Requires at least PHP version %1$s. (Installed v%2$s)',
 	);
 
 
@@ -38,6 +38,19 @@ class Compatibility {
 	}
 
 
+	/**
+	 * Set the notice header message
+	 *
+	 *
+	 * @param string $message printf format
+	 *
+	 * Available directives:
+	 *
+	 *     1. %s - package name
+	 *
+	 *
+	 * @return void
+	 */
 	public function message_header( string $message ): void {
 
 		$this->messages['header'] = $message;
@@ -45,6 +58,21 @@ class Compatibility {
 	}
 
 
+	/**
+	 * Set the WordPress error message
+	 *
+	 *
+	 * @param string $message sprintf format
+	 *
+	 * Available directives:
+	 *
+	 *     1. %s - required version
+	 *
+	 *     2. %s - installed version
+	 *
+	 *
+	 * @return void
+	 */
 	public function message_wp( string $message ): void {
 
 		$this->messages['wp'] = $message;
@@ -52,6 +80,22 @@ class Compatibility {
 	}
 
 
+	/**
+	 * Set the PHP error message
+	 *
+	 *
+	 * @param string $message sprintf format
+	 *
+	 *
+	 * Available directives:
+	 *
+	 *     1. %s - required version
+	 *
+	 *     2. %s - installed version
+	 *
+	 *
+	 * @return void
+	 */
 	public function message_php( string $message ): void {
 
 		$this->messages['php'] = $message;
@@ -65,7 +109,8 @@ class Compatibility {
 			$this->add_error(
 				sprintf(
 					$this->messages['wp'],
-					$this->wp_version
+					$this->wp_version,
+					$GLOBALS['wp_version']
 				)
 			);
 
@@ -83,7 +128,8 @@ class Compatibility {
 			$this->add_error(
 				sprintf(
 					$this->messages['php'],
-					$this->php_version
+					$this->php_version,
+					PHP_VERSION
 				)
 			);
 
@@ -107,15 +153,19 @@ class Compatibility {
 		?>
 		<div class="notice notice-error">
 			<h2>
-				<?php printf(
-					$this->messages['header'],
-					$this->package_name
-				); ?>
+				<?php
+				printf(
+					esc_html( $this->messages['header'] ),
+					wp_kses_post( $this->package_name )
+				);
+				?>
 			</h2>
 			<ul>
-				<?php foreach ( $this->errors as $error ) {
-					printf( '<li>%s</li>', $error );
-				} ?>
+				<?php
+				foreach ( $this->errors as $error ) {
+					printf( '<li>%s</li>', wp_kses_post( $error ) );
+				}
+				?>
 			</ul>
 		</div>
 		<?php

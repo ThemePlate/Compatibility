@@ -17,7 +17,10 @@ use ThemePlate\Compatibility;
 
 $compatibility = new Compatibility( 'Plugin', '5.0', '5.6' );
 
-$compatibility->message_header( 'Sorry! Plugin is not compatible.' );
-$compatibility->message_wp( 'Requires WP 5.0 or higher' );
-$compatibility->message_php( 'Requires PHP 5.6 or higher' );
+/* translators: %s package name */
+$compatibility->message_header( 'Sorry! %s is not compatible.' );
+/* translators: 1. required version, 2. installed version */
+$compatibility->message_wp( __( 'Requires WP %1$s or higher but currently running at %2$s', 'custom_domain' ) );
+/* translators: 1. required version, 2. installed version */
+$compatibility->message_php( __( 'Requires PHP %1$s or higher but currently running at %2$s', 'custom_domain' ) );
 ```
