@@ -18,13 +18,13 @@ class Compatibility {
 	protected string $php_version;
 	protected array $errors;
 	protected array $messages = array(
-		'header' => '%s compatibility issue.',
-		'wp'     => 'Requires at least WordPress version %1$s. (Installed v%2$s)',
-		'php'    => 'Requires at least PHP version %1$s. (Installed v%2$s)',
+		'header' => '%s compatibility issue:',
+		'wp'     => 'Requires at least WordPress version %1$s (Installed v%2$s)',
+		'php'    => 'Requires at least PHP version %1$s (Installed v%2$s)',
 	);
 
 
-	public function __construct( string $package_name, string $wp_version, string $php_version ) {
+	public function __construct( string $package_name, string $wp_version, string $php_version = '7.4' ) {
 
 		$this->package_name = $package_name;
 		$this->wp_version   = $wp_version;
@@ -51,11 +51,13 @@ class Compatibility {
 	 *     1. %s - package name
 	 *
 	 *
-	 * @return void
+	 * @return $this
 	 */
-	public function message_header( string $message ): void {
+	public function message_header( string $message ): self {
 
 		$this->messages['header'] = $message;
+
+		return $this;
 
 	}
 
@@ -73,11 +75,13 @@ class Compatibility {
 	 *     2. %s - installed version
 	 *
 	 *
-	 * @return void
+	 * @return $this
 	 */
-	public function message_wp( string $message ): void {
+	public function message_wp( string $message ): self {
 
 		$this->messages['wp'] = $message;
+
+		return $this;
 
 	}
 
@@ -96,11 +100,13 @@ class Compatibility {
 	 *     2. %s - installed version
 	 *
 	 *
-	 * @return void
+	 * @return $this
 	 */
-	public function message_php( string $message ): void {
+	public function message_php( string $message ): self {
 
 		$this->messages['php'] = $message;
+
+		return $this;
 
 	}
 
@@ -160,12 +166,11 @@ class Compatibility {
 				return;
 			}
 
-			WP_CLI::error(
+			WP_CLI::warning(
 				sprintf(
 					esc_html( $this->messages['header'] ),
 					wp_strip_all_tags( $this->package_name )
-				),
-				false
+				)
 			);
 
 			foreach ( $this->errors as $error ) {
@@ -185,7 +190,7 @@ class Compatibility {
 		}
 
 		?>
-		<div class="notice notice-error">
+		<div class="notice notice-warning">
 			<h2>
 				<?php
 				printf(

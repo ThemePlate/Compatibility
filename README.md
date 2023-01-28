@@ -5,7 +5,7 @@
 ```php
 use ThemePlate\Compatibility;
 
-( new Compatibility( 'My Project', '6.0', '7.4' ) )->setup();
+( new Compatibility( 'My Project', '6.0', '8.0' ) )->setup();
 ```
 
 ### Custom messages
