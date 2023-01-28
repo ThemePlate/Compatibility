@@ -9,6 +9,8 @@
 
 namespace ThemePlate;
 
+use WP_CLI;
+
 class Compatibility {
 
 	protected string $package_name;
@@ -141,10 +143,42 @@ class Compatibility {
 	}
 
 
-	public function maybe_notice(): void {
+	public function running_cli(): bool {
+
+		return defined( 'WP_CLI' ) && WP_CLI;
+
+	}
+
+
+	public function setup( int $priority = 10 ): void {
 
 		$this->valid_wp();
 		$this->valid_php();
+
+		if ( $this->running_cli() ) {
+			if ( empty( $this->errors ) ) {
+				return;
+			}
+
+			WP_CLI::error(
+				sprintf(
+					esc_html( $this->messages['header'] ),
+					wp_strip_all_tags( $this->package_name )
+				),
+				false
+			);
+
+			foreach ( $this->errors as $error ) {
+				WP_CLI::line( wp_strip_all_tags( $error ) );
+			}
+		} else {
+			add_action( 'admin_notices', array( $this, 'maybe_notice' ), $priority );
+		}
+
+	}
+
+
+	public function maybe_notice(): void {
 
 		if ( empty( $this->errors ) ) {
 			return;
