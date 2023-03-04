@@ -25,4 +25,11 @@ abstract class MinimumVersion extends BaseRequirement {
 	 */
 	abstract public function installed(): string;
 
+
+	public function message( string $format ): string {
+
+		return sprintf( $format, $this->requisite, $this->installed() );
+
+	}
+
 }

@@ -27,4 +27,11 @@ abstract class BaseRequirement implements RequirementInterface {
 
 	}
 
+
+	public function message( string $format ): string {
+
+		return sprintf( $format, $this->requisite );
+
+	}
+
 }

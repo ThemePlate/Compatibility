@@ -9,6 +9,7 @@
 
 namespace ThemePlate;
 
+use ThemePlate\Compatibility\Checker;
 use ThemePlate\Compatibility\Requirements\DefinedConstant;
 use ThemePlate\Compatibility\Requirements\PHPVersion;
 use ThemePlate\Compatibility\Requirements\WPVersion;
@@ -17,9 +18,8 @@ use WP_CLI;
 class Compatibility {
 
 	protected string $package_name;
-	protected WPVersion $wp;
-	protected PHPVersion $php;
-	protected array $errors;
+	protected Checker $checker;
+
 	protected array $messages = array(
 		'header' => '%s compatibility issue:',
 		'wp'     => 'Requires at least WordPress version %1$s (Installed v%2$s)',
@@ -31,15 +31,10 @@ class Compatibility {
 
 		$this->package_name = $package_name;
 
-		$this->wp  = new WPVersion( $wp_version );
-		$this->php = new PHPVersion( $php_version );
+		$this->checker = new Checker();
 
-	}
-
-
-	protected function add_error( string $message ): void {
-
-		$this->errors[] = $message;
+		$this->checker->add( 'wp', new WPVersion( $wp_version ) );
+		$this->checker->add( 'php', new PHPVersion( $php_version ) );
 
 	}
 
@@ -115,44 +110,6 @@ class Compatibility {
 	}
 
 
-	public function valid_wp(): bool {
-
-		if ( ! $this->wp->satisfied() ) {
-			$this->add_error(
-				sprintf(
-					$this->messages['wp'],
-					$this->wp->requisite(),
-					$this->wp->installed()
-				)
-			);
-
-			return false;
-		}
-
-		return true;
-
-	}
-
-
-	public function valid_php(): bool {
-
-		if ( ! $this->php->satisfied() ) {
-			$this->add_error(
-				sprintf(
-					$this->messages['php'],
-					$this->php->requisite(),
-					$this->php->installed()
-				)
-			);
-
-			return false;
-		}
-
-		return true;
-
-	}
-
-
 	public function running_cli(): bool {
 
 		return ( new DefinedConstant( 'WP_CLI' ) )->satisfied();
@@ -162,11 +119,12 @@ class Compatibility {
 
 	public function setup( int $priority = 10 ): void {
 
-		$this->valid_wp();
-		$this->valid_php();
+		$this->checker->run( $this->messages );
 
 		if ( $this->running_cli() ) {
-			if ( empty( $this->errors ) ) {
+			$handler = $this->checker->get_error();
+
+			if ( ! $handler->has_errors() ) {
 				return;
 			}
 
@@ -177,7 +135,7 @@ class Compatibility {
 				)
 			);
 
-			foreach ( $this->errors as $error ) {
+			foreach ( $handler->get_error_messages() as $error ) {
 				WP_CLI::line( wp_strip_all_tags( $error ) );
 			}
 		} else {
@@ -189,7 +147,9 @@ class Compatibility {
 
 	public function maybe_notice(): void {
 
-		if ( empty( $this->errors ) ) {
+		$handler = $this->checker->get_error();
+
+		if ( ! $handler->has_errors() ) {
 			return;
 		}
 
@@ -205,7 +165,7 @@ class Compatibility {
 			</h2>
 			<ul>
 				<?php
-				foreach ( $this->errors as $error ) {
+				foreach ( $handler->get_error_messages() as $error ) {
 					printf( '<li>%s</li>', wp_kses_post( $error ) );
 				}
 				?>

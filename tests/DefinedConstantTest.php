@@ -34,4 +34,17 @@ class DefinedConstantTest extends TestCase {
 		define( 'TEST_ARRAY', array( 'test' ) );
 		$this->assertTrue( ( new DefinedConstant( 'TEST_ARRAY' ) )->satisfied() );
 	}
+
+	public function for_message(): array {
+
+		return array(
+			array( 'Requires the constant `%1$s`', 'Requires the constant `TESTER`' ),
+			array( 'Constant "%1$s" is required', 'Constant "TESTER" is required' ),
+		);
+	}
+
+	/** @dataProvider for_message */
+	public function test_message( string $format, string $expected ): void {
+		$this->assertSame( $expected, ( new DefinedConstant( 'TESTER' ) )->message( $format ) );
+	}
 }

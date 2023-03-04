@@ -8,6 +8,8 @@ namespace Tests;
 
 use ThemePlate\Compatibility\Requirements\MinimumVersion;
 use PHPUnit\Framework\TestCase;
+use ThemePlate\Compatibility\Requirements\PHPVersion;
+use ThemePlate\Compatibility\Requirements\WPVersion;
 
 class MinimumVersionTest extends TestCase {
 	public function for_possibilities(): array {
@@ -40,5 +42,23 @@ class MinimumVersionTest extends TestCase {
 		} else {
 			$this->assertFalse( $class->satisfied() );
 		}
+	}
+
+	public function for_message(): array {
+		global $wp_version;
+
+		$wp_version = '6.1.1'; // phpcs:ignore WordPress.WP.GlobalVariablesOverride.Prohibited
+
+		return array(
+			array( new PHPVersion( '8.0' ), 'Requires at least PHP version %1$s (Installed v%2$s)', 'Requires at least PHP version 8.0 (Installed v' . PHP_VERSION . ')' ),
+			array( new PHPVersion( '8.2' ), 'Requires PHP %1$s or higher but currently running at %2$s', 'Requires PHP 8.2 or higher but currently running at ' . PHP_VERSION ),
+			array( new WPVersion( '6.2' ), 'Requires at least WP version %1$s (Installed v%2$s)', 'Requires at least WP version 6.2 (Installed v' . $wp_version . ')' ),
+			array( new WPVersion( '7.0' ), 'Requires WP %1$s or higher but currently running at %2$s', 'Requires WP 7.0 or higher but currently running at ' . $wp_version ),
+		);
+	}
+
+	/** @dataProvider for_message */
+	public function test_message( MinimumVersion $class, string $format, string $expected ): void {
+		$this->assertSame( $expected, $class->message( $format ) );
 	}
 }

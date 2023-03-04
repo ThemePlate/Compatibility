@@ -13,6 +13,8 @@ interface RequirementInterface {
 
 	public function requisite(): string;
 
+	public function message( string $format ): string;
+
 	public function satisfied(): bool;
 
 }
