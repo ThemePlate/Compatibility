@@ -10,10 +10,9 @@
 namespace ThemePlate;
 
 use ThemePlate\Compatibility\Checker;
-use ThemePlate\Compatibility\Requirements\DefinedConstant;
+use ThemePlate\Compatibility\Notice;
 use ThemePlate\Compatibility\Requirements\PHPVersion;
 use ThemePlate\Compatibility\Requirements\WPVersion;
-use WP_CLI;
 
 class Compatibility {
 
@@ -110,42 +109,9 @@ class Compatibility {
 	}
 
 
-	public function running_cli(): bool {
-
-		return ( new DefinedConstant( 'WP_CLI' ) )->satisfied();
-
-	}
-
-
-	public function setup( int $priority = 10 ): void {
+	public function setup(): void {
 
 		$this->checker->run( $this->messages );
-
-		if ( $this->running_cli() ) {
-			$handler = $this->checker->get_error();
-
-			if ( ! $handler->has_errors() ) {
-				return;
-			}
-
-			WP_CLI::warning(
-				sprintf(
-					esc_html( $this->messages['header'] ),
-					wp_strip_all_tags( $this->package_name )
-				)
-			);
-
-			foreach ( $handler->get_error_messages() as $error ) {
-				WP_CLI::line( wp_strip_all_tags( $error ) );
-			}
-		} else {
-			add_action( 'admin_notices', array( $this, 'maybe_notice' ), $priority );
-		}
-
-	}
-
-
-	public function maybe_notice(): void {
 
 		$handler = $this->checker->get_error();
 
@@ -153,25 +119,13 @@ class Compatibility {
 			return;
 		}
 
-		?>
-		<div class="notice notice-warning">
-			<h2>
-				<?php
-				printf(
-					esc_html( $this->messages['header'] ),
-					wp_kses_post( $this->package_name )
-				);
-				?>
-			</h2>
-			<ul>
-				<?php
-				foreach ( $handler->get_error_messages() as $error ) {
-					printf( '<li>%s</li>', wp_kses_post( $error ) );
-				}
-				?>
-			</ul>
-		</div>
-		<?php
+		( new Notice(
+			sprintf(
+				$this->messages['header'],
+				$this->package_name
+			),
+			$handler
+		) )->print();
 
 	}
 
