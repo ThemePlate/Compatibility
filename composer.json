@@ -26,8 +26,11 @@
 		"wp-cli/wp-cli": "^2.7"
 	},
 	"autoload": {
+		"files": [
+			"Compatibility.php"
+		],
 		"psr-4": {
-			"ThemePlate\\": "src"
+			"ThemePlate\\Compatibility\\": "src"
 		}
 	},
 	"autoload-dev": {
