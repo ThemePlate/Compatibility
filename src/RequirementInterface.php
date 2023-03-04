@@ -11,6 +11,8 @@ namespace ThemePlate\Compatibility;
 
 interface RequirementInterface {
 
+	public function requisite(): string;
+
 	public function satisfied(): bool;
 
 }

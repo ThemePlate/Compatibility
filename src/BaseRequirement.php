@@ -20,4 +20,11 @@ abstract class BaseRequirement implements RequirementInterface {
 
 	}
 
+
+	public function requisite(): string {
+
+		return $this->requisite;
+
+	}
+
 }

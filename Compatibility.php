@@ -9,13 +9,16 @@
 
 namespace ThemePlate;
 
+use ThemePlate\Compatibility\Requirements\DefinedConstant;
+use ThemePlate\Compatibility\Requirements\PHPVersion;
+use ThemePlate\Compatibility\Requirements\WPVersion;
 use WP_CLI;
 
 class Compatibility {
 
 	protected string $package_name;
-	protected string $wp_version;
-	protected string $php_version;
+	protected WPVersion $wp;
+	protected PHPVersion $php;
 	protected array $errors;
 	protected array $messages = array(
 		'header' => '%s compatibility issue:',
@@ -27,8 +30,9 @@ class Compatibility {
 	public function __construct( string $package_name, string $wp_version, string $php_version = '7.4' ) {
 
 		$this->package_name = $package_name;
-		$this->wp_version   = $wp_version;
-		$this->php_version  = $php_version;
+
+		$this->wp  = new WPVersion( $wp_version );
+		$this->php = new PHPVersion( $php_version );
 
 	}
 
@@ -113,12 +117,12 @@ class Compatibility {
 
 	public function valid_wp(): bool {
 
-		if ( version_compare( $GLOBALS['wp_version'], $this->wp_version, '<' ) ) {
+		if ( ! $this->wp->satisfied() ) {
 			$this->add_error(
 				sprintf(
 					$this->messages['wp'],
-					$this->wp_version,
-					$GLOBALS['wp_version']
+					$this->wp->requisite(),
+					$this->wp->installed()
 				)
 			);
 
@@ -132,12 +136,12 @@ class Compatibility {
 
 	public function valid_php(): bool {
 
-		if ( version_compare( PHP_VERSION, $this->php_version, '<' ) ) {
+		if ( ! $this->php->satisfied() ) {
 			$this->add_error(
 				sprintf(
 					$this->messages['php'],
-					$this->php_version,
-					PHP_VERSION
+					$this->php->requisite(),
+					$this->php->installed()
 				)
 			);
 
@@ -151,7 +155,7 @@ class Compatibility {
 
 	public function running_cli(): bool {
 
-		return defined( 'WP_CLI' ) && WP_CLI;
+		return ( new DefinedConstant( 'WP_CLI' ) )->satisfied();
 
 	}
 
