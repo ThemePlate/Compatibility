@@ -123,9 +123,8 @@ class Compatibility {
 			sprintf(
 				$this->messages['header'],
 				$this->package_name
-			),
-			$handler
-		) )->print();
+			)
+		) )->set_error( $handler )->print();
 
 	}
 

@@ -16,13 +16,21 @@ use WP_Error;
 class Notice {
 
 	protected string $header;
-	protected WP_Error $error;
+	protected ?WP_Error $error = null;
 
 
-	public function __construct( string $header, WP_Error $error ) {
+	public function __construct( string $header ) {
 
 		$this->header = $header;
-		$this->error  = $error;
+
+	}
+
+
+	public function set_error( WP_Error $error ): Notice {
+
+		$this->error = $error;
+
+		return $this;
 
 	}
 
@@ -42,6 +50,10 @@ class Notice {
 
 		WP_CLI::warning( $this->header );
 
+		if ( null === $this->error ) {
+			return;
+		}
+
 		foreach ( $this->error->get_error_messages() as $error ) {
 			WP_CLI::line( wp_strip_all_tags( $error ) );
 		}
@@ -54,6 +66,7 @@ class Notice {
 		?>
 		<div class="notice notice-warning">
 			<h2><?php echo esc_html( $this->header ); ?></h2>
+			<?php if ( null !== $this->error ) : ?>
 			<ul>
 				<?php
 				foreach ( $this->error->get_error_messages() as $error ) {
@@ -61,6 +74,7 @@ class Notice {
 				}
 				?>
 			</ul>
+			<?php endif; ?>
 		</div>
 		<?php
 

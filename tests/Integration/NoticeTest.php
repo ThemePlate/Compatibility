@@ -26,7 +26,7 @@ class NoticeTest extends WP_UnitTestCase {
 		$messages[] = ''; // Expected new line
 
 		ob_start();
-		( new Notice( 'This is a test', $error ) )->print_cli();
+		( new Notice( 'This is a test' ) )->set_error( $error )->print_cli();
 		// Intentional no printed header
 		$this->assertSame( implode( "\n", $messages ), ob_get_clean() );
 	}
@@ -46,7 +46,7 @@ class NoticeTest extends WP_UnitTestCase {
 		$header = 'Another test';
 
 		ob_start();
-		( new Notice( $header, $error ) )->print_web();
+		( new Notice( $header ) )->set_error( $error )->print_web();
 		$actual = ob_get_clean();
 
 		$this->assertStringContainsString( $header, $actual );
