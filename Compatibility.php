@@ -16,7 +16,6 @@ use ThemePlate\Compatibility\Requirements\WPVersion;
 
 class Compatibility {
 
-	protected string $package_name;
 	protected Checker $checker;
 
 	protected array $messages = array(
@@ -26,9 +25,7 @@ class Compatibility {
 	);
 
 
-	public function __construct( string $package_name, string $wp_version, string $php_version = '7.4' ) {
-
-		$this->package_name = $package_name;
+	public function __construct( string $wp_version, string $php_version = '7.4' ) {
 
 		$this->checker = new Checker();
 
@@ -109,7 +106,7 @@ class Compatibility {
 	}
 
 
-	public function setup(): void {
+	public function setup( string $package_name ): void {
 
 		$this->checker->run( $this->messages );
 
@@ -122,7 +119,7 @@ class Compatibility {
 		( new Notice(
 			sprintf(
 				$this->messages['header'],
-				$this->package_name
+				$package_name
 			)
 		) )->set_error( $handler )->print();
 

@@ -5,7 +5,7 @@
 ```php
 use ThemePlate\Compatibility;
 
-( new Compatibility( 'My Project', '6.0', '8.0' ) )->setup();
+( new Compatibility( '6.0', '8.0' ) )->setup( 'My Project' );
 ```
 
 ### Custom messages
@@ -13,7 +13,7 @@ use ThemePlate\Compatibility;
 ```php
 use ThemePlate\Compatibility;
 
-$compatibility = new Compatibility( 'Plugin', '5.0', '5.6' );
+$compatibility = new Compatibility( '5.0', '5.6' );
 
 /* translators: %s package name */
 $compatibility->message_header( 'Sorry! %s is not compatible.' );
