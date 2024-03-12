@@ -19,9 +19,9 @@ class Compatibility {
 	protected Checker $checker;
 
 	protected array $messages = array(
-		'header' => '%s compatibility issue:',
-		'wp'     => 'Requires at least WordPress version %1$s (Installed v%2$s)',
-		'php'    => 'Requires at least PHP version %1$s (Installed v%2$s)',
+		'header'          => '%s compatibility issue:',
+		WPVersion::class  => 'Requires at least WordPress version %1$s (Installed v%2$s)',
+		PHPVersion::class => 'Requires at least PHP version %1$s (Installed v%2$s)',
 	);
 
 
@@ -29,8 +29,8 @@ class Compatibility {
 
 		$this->checker = new Checker();
 
-		$this->checker->add( 'wp', new WPVersion( $wp_version ) );
-		$this->checker->add( 'php', new PHPVersion( $php_version ) );
+		$this->checker->add( new WPVersion( $wp_version ) );
+		$this->checker->add( new PHPVersion( $php_version ) );
 
 	}
 
@@ -74,7 +74,7 @@ class Compatibility {
 	 */
 	public function message_wp( string $message ): self {
 
-		$this->messages['wp'] = $message;
+		$this->messages[ WPVersion::class ] = $message;
 
 		return $this;
 
@@ -99,7 +99,7 @@ class Compatibility {
 	 */
 	public function message_php( string $message ): self {
 
-		$this->messages['php'] = $message;
+		$this->messages[ PHPVersion::class ] = $message;
 
 		return $this;
 

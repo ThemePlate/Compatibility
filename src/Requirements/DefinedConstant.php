@@ -13,6 +13,13 @@ use ThemePlate\Compatibility\BaseRequirement;
 
 class DefinedConstant extends BaseRequirement {
 
+	public function identifier(): string {
+
+		return $this->requisite;
+
+	}
+
+
 	public function satisfied(): bool {
 
 		return defined( $this->requisite ) && constant( $this->requisite );

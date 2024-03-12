@@ -26,9 +26,9 @@ class Checker {
 	}
 
 
-	public function add( string $identifier, RequirementInterface $requirement ): Checker {
+	public function add( RequirementInterface $requirement ): Checker {
 
-		$this->requirements[ $identifier ] = $requirement;
+		$this->requirements[ $requirement->identifier() ] = $requirement;
 
 		return $this;
 
@@ -37,9 +37,11 @@ class Checker {
 
 	public function run( array $messages ): void {
 
-		foreach ( $this->requirements as $identifier => $requirement ) {
+		foreach ( $this->requirements as $requirement ) {
 			if ( ! $requirement->satisfied() ) {
-				$this->error->add( $identifier, $requirement->message( $messages[ $identifier ] ?? '' ) );
+				$code = $requirement->identifier();
+
+				$this->error->add( $code, $requirement->message( $messages[ $code ] ?? '' ) );
 			}
 		}
 

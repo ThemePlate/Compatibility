@@ -11,6 +11,8 @@ namespace ThemePlate\Compatibility;
 
 interface RequirementInterface {
 
+	public function identifier(): string;
+
 	public function requisite(): string;
 
 	public function message( string $format ): string;
