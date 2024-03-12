@@ -11,6 +11,13 @@ namespace ThemePlate\Compatibility\Requirements;
 
 class PHPVersion extends MinimumVersion {
 
+	public function identifier(): string {
+
+		return $this->identifier;
+
+	}
+
+
 	/**
 	 * @return string The version number installed
 	 */

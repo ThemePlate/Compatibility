@@ -9,19 +9,28 @@
 
 namespace ThemePlate\Compatibility;
 
+use ReflectionClass;
+
 abstract class BaseRequirement implements RequirementInterface {
 
 	protected string $requisite;
+	protected string $identifier;
 
 
 	public function __construct( string $requisite ) {
+
+		$this->identifier = ( new ReflectionClass( $this ) )->getShortName();
 
 		$this->requisite = $requisite;
 
 	}
 
 
-	abstract public function identifier(): string;
+	public function identifier(): string {
+
+		return $this->identifier . ':' . $this->requisite;
+
+	}
 
 
 	public function requisite(): string {

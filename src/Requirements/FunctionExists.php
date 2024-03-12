@@ -13,13 +13,6 @@ use ThemePlate\Compatibility\BaseRequirement;
 
 class FunctionExists extends BaseRequirement {
 
-	public function identifier(): string {
-
-		return $this->requisite;
-
-	}
-
-
 	public function satisfied(): bool {
 
 		return function_exists( $this->requisite );

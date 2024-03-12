@@ -13,13 +13,6 @@ use ThemePlate\Compatibility\BaseRequirement;
 
 class ClassExists extends BaseRequirement {
 
-	public function identifier(): string {
-
-		return $this->requisite;
-
-	}
-
-
 	public function satisfied(): bool {
 
 		return class_exists( $this->requisite );

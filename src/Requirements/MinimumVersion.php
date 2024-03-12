@@ -13,13 +13,6 @@ use ThemePlate\Compatibility\BaseRequirement;
 
 abstract class MinimumVersion extends BaseRequirement {
 
-	public function identifier(): string {
-
-		return static::class;
-
-	}
-
-
 	public function satisfied(): bool {
 
 		return version_compare( $this->installed(), $this->requisite, '>=' );
