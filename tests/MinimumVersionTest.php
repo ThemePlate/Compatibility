@@ -42,6 +42,8 @@ class MinimumVersionTest extends TestCase {
 		} else {
 			$this->assertFalse( $class->satisfied() );
 		}
+
+		$this->assertSame( "The `$wanted` minimum version is not met", $class->message() );
 	}
 
 	public function for_message(): array {

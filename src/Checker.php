@@ -35,7 +35,7 @@ class Checker {
 	}
 
 
-	public function run( array $messages ): void {
+	public function run( array $messages = array() ): void {
 
 		foreach ( $this->requirements as $requirement ) {
 			if ( ! $requirement->satisfied() ) {

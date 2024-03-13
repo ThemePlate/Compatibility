@@ -13,6 +13,9 @@ use ThemePlate\Compatibility\BaseRequirement;
 
 abstract class MinimumVersion extends BaseRequirement {
 
+	public const DEFAULT_MESSAGE_FORMAT = 'The `%s` minimum version is not met';
+
+
 	public function satisfied(): bool {
 
 		return version_compare( $this->installed(), $this->requisite, '>=' );
@@ -26,7 +29,11 @@ abstract class MinimumVersion extends BaseRequirement {
 	abstract public function installed(): string;
 
 
-	public function message( string $format ): string {
+	public function message( string $format = null ): string {
+
+		if ( ! $format ) {
+			$format = static::DEFAULT_MESSAGE_FORMAT;
+		}
 
 		return sprintf( $format, $this->requisite, $this->installed() );
 

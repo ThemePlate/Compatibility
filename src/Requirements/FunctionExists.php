@@ -13,6 +13,9 @@ use ThemePlate\Compatibility\BaseRequirement;
 
 class FunctionExists extends BaseRequirement {
 
+	public const DEFAULT_MESSAGE_FORMAT = 'The function `%s` does not exists';
+
+
 	public function satisfied(): bool {
 
 		return function_exists( $this->requisite );

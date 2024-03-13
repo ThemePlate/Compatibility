@@ -16,6 +16,8 @@ abstract class BaseRequirement implements RequirementInterface {
 	protected string $requisite;
 	protected string $identifier;
 
+	public const DEFAULT_MESSAGE_FORMAT = 'The `%s` requirement is not met.';
+
 
 	public function __construct( string $requisite ) {
 
@@ -40,7 +42,11 @@ abstract class BaseRequirement implements RequirementInterface {
 	}
 
 
-	public function message( string $format ): string {
+	public function message( string $format = null ): string {
+
+		if ( ! $format ) {
+			$format = static::DEFAULT_MESSAGE_FORMAT;
+		}
 
 		return sprintf( $format, $this->requisite );
 

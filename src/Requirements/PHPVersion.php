@@ -11,6 +11,9 @@ namespace ThemePlate\Compatibility\Requirements;
 
 class PHPVersion extends MinimumVersion {
 
+	public const DEFAULT_MESSAGE_FORMAT = 'PHP v%1$s requirement is not met (Installed v%2$s)';
+
+
 	public function identifier(): string {
 
 		return $this->identifier;
