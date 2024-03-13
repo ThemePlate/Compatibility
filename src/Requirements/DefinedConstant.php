@@ -18,7 +18,7 @@ class DefinedConstant extends BaseRequirement {
 
 	public function satisfied(): bool {
 
-		return defined( $this->requisite ) && constant( $this->requisite );
+		return defined( $this->requisite );
 
 	}
 

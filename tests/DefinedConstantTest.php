@@ -14,13 +14,16 @@ class DefinedConstantTest extends TestCase {
 		$this->assertFalse( ( new DefinedConstant( 'test' ) )->satisfied() );
 
 		define( 'TEST_EMPTY', '' );
-		$this->assertFalse( ( new DefinedConstant( 'TEST_EMPTY' ) )->satisfied() );
+		$this->assertTrue( ( new DefinedConstant( 'TEST_EMPTY' ) )->satisfied() );
+		$this->assertFalse( ! ! constant( 'TEST_EMPTY' ) );
 
 		define( 'TEST_NULL', null );
-		$this->assertFalse( ( new DefinedConstant( 'TEST_NULL' ) )->satisfied() );
+		$this->assertTrue( ( new DefinedConstant( 'TEST_NULL' ) )->satisfied() );
+		$this->assertFalse( ! ! constant( 'TEST_NULL' ) );
 
 		define( 'TEST_FALSE', false );
-		$this->assertFalse( ( new DefinedConstant( 'TEST_FALSE' ) )->satisfied() );
+		$this->assertTrue( ( new DefinedConstant( 'TEST_FALSE' ) )->satisfied() );
+		$this->assertFalse( ! ! constant( 'TEST_FALSE' ) );
 
 		define( 'TEST_TRUE', true );
 		$this->assertTrue( ( new DefinedConstant( 'TEST_TRUE' ) )->satisfied() );
