@@ -119,7 +119,7 @@ class Compatibility {
 		( new Notice( 'warning' ) )->set_header(
 			sprintf(
 				$this->messages['header'],
-				$package_name
+				'<strong>' . $package_name . '</strong>'
 			)
 		)->set_error( $handler )->print();
 

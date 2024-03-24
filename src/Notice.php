@@ -89,10 +89,14 @@ class Notice {
 
 	public function print_web(): void {
 
+		if ( null === $this->header && null === $this->error ) {
+			return;
+		}
+
 		?>
 		<div class="notice notice-<?php echo esc_attr( $this->type ); ?><?php echo $this->dismissible ? ' is-dismissible' : ''; ?>">
 			<?php if ( null !== $this->header ) : ?>
-			<h2><?php echo esc_html( $this->header ); ?></h2>
+			<p><?php echo wp_kses_post( $this->header ); ?></p>
 			<?php endif; ?>
 
 			<?php if ( null !== $this->error ) : ?>
