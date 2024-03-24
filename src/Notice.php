@@ -20,8 +20,19 @@ class Notice {
 	protected ?string $header  = null;
 	protected ?WP_Error $error = null;
 
+	public const LEVELS = array(
+		'warning',
+		'info',
+		'error',
+		'success',
+	);
+
 
 	public function __construct( string $type, bool $dismissible = false ) {
+
+		if ( ! in_array( $type, self::LEVELS, true ) ) {
+			$type = self::LEVELS[0];
+		}
 
 		$this->type = $type;
 
