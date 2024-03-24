@@ -116,12 +116,12 @@ class Compatibility {
 			return;
 		}
 
-		( new Notice(
+		( new Notice( 'warning' ) )->set_header(
 			sprintf(
 				$this->messages['header'],
 				$package_name
 			)
-		) )->set_error( $handler )->print();
+		)->set_error( $handler )->print();
 
 	}
 

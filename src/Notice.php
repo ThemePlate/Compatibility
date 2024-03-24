@@ -15,13 +15,17 @@ use WP_Error;
 
 class Notice {
 
-	protected string $header;
+	protected string $type;
+	protected bool $dismissible;
+	protected ?string $header  = null;
 	protected ?WP_Error $error = null;
 
 
-	public function __construct( string $header ) {
+	public function __construct( string $type, bool $dismissible = false ) {
 
-		$this->header = $header;
+		$this->type = $type;
+
+		$this->dismissible = $dismissible;
 
 	}
 
@@ -29,6 +33,15 @@ class Notice {
 	public function set_error( WP_Error $error ): Notice {
 
 		$this->error = $error;
+
+		return $this;
+
+	}
+
+
+	public function set_header( string $header ): Notice {
+
+		$this->header = $header;
 
 		return $this;
 
@@ -48,7 +61,9 @@ class Notice {
 
 	public function print_cli(): void {
 
-		WP_CLI::warning( $this->header );
+		if ( null !== $this->header ) {
+			WP_CLI::warning( $this->header );
+		}
 
 		if ( null === $this->error ) {
 			return;
@@ -64,8 +79,11 @@ class Notice {
 	public function print_web(): void {
 
 		?>
-		<div class="notice notice-warning">
+		<div class="notice notice-<?php echo esc_attr( $this->type ); ?><?php echo $this->dismissible ? ' is-dismissible' : ''; ?>">
+			<?php if ( null !== $this->header ) : ?>
 			<h2><?php echo esc_html( $this->header ); ?></h2>
+			<?php endif; ?>
+
 			<?php if ( null !== $this->error ) : ?>
 			<ul>
 				<?php
