@@ -12,7 +12,7 @@ use WP_Error;
 use WP_UnitTestCase;
 
 class NoticeTest extends WP_UnitTestCase {
-	protected function for_type(): array {
+	public function for_type(): array {
 		return array(
 			array( 'success', true ),
 			array( 'random', false ),

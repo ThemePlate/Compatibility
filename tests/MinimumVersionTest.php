@@ -60,7 +60,7 @@ class MinimumVersionTest extends TestCase {
 	}
 
 	/** @dataProvider for_message */
-	public function test_message( MinimumVersion $class, string $format, string $expected ): void {
-		$this->assertSame( $expected, $class->message( $format ) );
+	public function test_message( MinimumVersion $obj, string $format, string $expected ): void {
+		$this->assertSame( $expected, $obj->message( $format ) );
 	}
 }
