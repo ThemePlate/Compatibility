@@ -19,7 +19,7 @@ class Checker {
 	protected array $requirements;
 
 
-	public function __construct( WP_Error $error = null ) {
+	public function __construct( ?WP_Error $error = null ) {
 
 		$this->error = $error ?? new WP_Error();
 

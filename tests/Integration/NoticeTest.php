@@ -20,7 +20,7 @@ class NoticeTest extends WP_UnitTestCase {
 	}
 
 	/** @dataProvider for_type */
-	public function test_type( string $type, bool $valid ) {
+	public function test_type( string $type, bool $valid ): void {
 		$value = Utils::get_inaccessible_property( new Notice( $type ), 'type' );
 
 		if ( $valid ) {

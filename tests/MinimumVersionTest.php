@@ -26,7 +26,7 @@ class MinimumVersionTest extends TestCase {
 		$class = new class( $wanted, $have ) extends MinimumVersion {
 			protected string $have;
 
-			public function __construct( $wanted, $have ) {
+			public function __construct( string $wanted, $have ) {
 				parent::__construct( $wanted );
 
 				$this->have = $have;
