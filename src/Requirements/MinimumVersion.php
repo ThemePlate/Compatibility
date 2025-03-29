@@ -29,9 +29,9 @@ abstract class MinimumVersion extends BaseRequirement {
 	abstract public function installed(): string;
 
 
-	public function message( string $format = null ): string {
+	public function message( ?string $format = null ): string {
 
-		if ( ! $format ) {
+		if ( null === $format || '' === $format ) {
 			$format = static::DEFAULT_MESSAGE_FORMAT;
 		}
 

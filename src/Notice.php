@@ -76,7 +76,7 @@ class Notice {
 			WP_CLI::warning( $this->header );
 		}
 
-		if ( null === $this->error ) {
+		if ( ! $this->error instanceof WP_Error ) {
 			return;
 		}
 
@@ -89,7 +89,7 @@ class Notice {
 
 	public function print_web(): void {
 
-		if ( null === $this->header && null === $this->error ) {
+		if ( null === $this->header && ! $this->error instanceof WP_Error ) {
 			return;
 		}
 
@@ -99,7 +99,7 @@ class Notice {
 			<p><?php echo wp_kses_post( $this->header ); ?></p>
 			<?php endif; ?>
 
-			<?php if ( null !== $this->error ) : ?>
+			<?php if ( $this->error instanceof WP_Error ) : ?>
 			<ul>
 				<?php
 				foreach ( $this->error->get_error_messages() as $error ) {
